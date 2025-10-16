@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>STOOLL — коллекция изображений</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Все стили остаются без изменений */
+    :root{
+      --header-h:80px;
+      --dark-green: #0d3b2a;
+      --dark: #111111;
+      --white: #ffffff;
+      --bg: #f8f8f8;
+      --muted: #444444;
+      --card: #ffffff;
+      --border: #e0e0e0;
+      --radius:14px;
+      --gap:28px;
+      --container-w:1280px;
+      --accent: #0d3b2a;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:#111111;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+    }
+
+    .wrap{max-width:var(--container-w);margin:0 auto;padding:0 28px}
+    header.site-header{
+      position:fixed;left:0;right:0;top:0;height:var(--header-h);
+      background:var(--dark-green);
+      color:var(--white);
+      display:flex;align-items:center;z-index:1200;
+      box-shadow:0 8px 28px rgba(0,0,0,0.08);
+      border-bottom:1px solid rgba(0,0,0,0.06);
+    }
+    .header-inner{max-width:var(--container-w);margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+    .brand-container {display: flex;flex-direction: column;line-height: 1;}
+    .brand-name{
+      font-family: "Poppins", "Inter", sans-serif;
+      font-size:22px;font-weight:700;letter-spacing:0.2px;color:var(--white);
+      margin: 0;
+    }
+    .brand-sub{font-size:12px;color:rgba(255,255,255,0.85);margin-top:2px;font-weight:500}
+    .header-actions{display:flex;gap:12px;align-items:center}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.95);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .btn-primary{background:var(--white);color:var(--dark-green);padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+    main{padding-top:calc(var(--header-h) + 20px)}
+    .hero{padding:28px 0;text-align:center}
+    .hero h1{font-family:"Poppins",sans-serif;font-size:40px;margin-bottom:8px;color:#111111}
+    .hero p{color:var(--muted);max-width:960px;margin:0 auto;font-size:15px}
+    .collection-section{margin:60px 0;}
+    .collection-title{font-family:"Poppins",sans-serif;font-size:24px;color:#111111;margin-bottom:28px;padding-left:0}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      display:flex;
+      flex-direction:column;
+      transition:transform .22s ease,box-shadow .22s ease;
+    }
+    .card:hover{transform:translateY(-8px);box-shadow:0 26px 60px rgba(0,0,0,0.08)}
+    .media{height:500px;background:linear-gradient(135deg,#f5f5f5,#eaeaea);display:flex;align-items:center;justify-content:center}
+    .media img{width:100%;height:100%;object-fit:cover;display:block}
+    .info{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+    .info-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .info .meta{font-size:13px;color:var(--muted)}
+    .price{font-weight:700;color:#111111;font-family:"Poppins",sans-serif}
+    .buy-btn{
+      background: var(--dark-green);
+      color: var(--white);
+      border: none;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      width: 100%;
+      transition: background 0.2s ease;
+    }
+    .buy-btn:hover {background: #0a3123;}
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1300;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .modal-title {font-family: "Poppins", sans-serif;font-size: 20px;margin-bottom: 16px;color: #111111;}
+    .modal-text {color: var(--muted);margin-bottom: 24px;line-height: 1.5;}
+    .modal-actions {display: flex;gap: 12px;justify-content: flex-end;}
+    .modal-btn {padding: 10px 20px;border: none;border-radius: 8px;cursor: pointer;font-weight: 600;font-size: 14px;}
+    .modal-btn-cancel {background: #f0f0f0;color: #444;}
+    .modal-btn-confirm {background: var(--dark-green);color: white;}
+    .payment-form {display: flex;flex-direction: column;gap: 16px;}
+    .form-group {display: flex;flex-direction: column;gap: 6px;}
+    .form-label {font-size: 14px;font-weight: 600;color: #333;}
+    .form-input {padding: 12px;border: 1px solid var(--border);border-radius: 8px;font-size: 15px;}
+    .form-row {display: flex;gap: 12px;}
+    .form-row .form-group {flex: 1;}
+    .checkbox-group {display: flex;align-items: flex-start;gap: 10px;margin: 10px 0;}
+    .checkbox-group input {margin-top: 3px;}
+    .checkbox-label {font-size: 13px;color: var(--muted);line-height: 1.4;}
+    footer{padding:36px 0;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:13px}
+    .note{font-size:13px;color:var(--muted);margin-top:8px}
+    
+    @media (max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}.media{height:420px}}
+    @media (max-width:780px){.grid{grid-template-columns:1fr}.media{height:320px}.header-inner{padding:0 16px}.form-row {flex-direction: column;gap: 16px;}}
+    button:focus, a:focus{outline:3px solid rgba(13, 59, 42, 0.12);outline-offset:2px}
+  </style>
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="header-inner wrap">
+      <div class="brand-container">
+        <div class="brand-name">STOOLL</div>
+        <div class="brand-sub">цифровая коллекция изображений</div>
+      </div>
+      <nav class="header-actions" role="navigation" aria-label="Главное меню">
+        <button class="btn-ghost" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">О магазине</button>
+        <button class="btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Коллекция</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="hero" aria-labelledby="hero-title">
+        <h1 id="hero-title">Коллекция STOOLL</h1>
+        <p>Коллекция цифровых изображений табуретов. Каждый лот — это файл изображения для использования в визуальном контенте. Вы покупаете только цифровое изображение, физические товары не поставляются.</p>
+      </section>
+
+      <section id="products" class="section">
+        <div class="collection-section" aria-labelledby="basis-title">
+          <h3 class="collection-title" id="basis-title">BASIS</h3>
+          <div class="grid" role="list" aria-label="BASIS items">
+            <article class="card" role="listitem">
+              <div class="media">
+                <!-- ОБНОВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ -->
+                <img src="images/BASIS — нейтральный визуал.jpg" alt="BASIS — нейтральный визуал">
+              </div>
+              <div class="info">
+                <div class="info-top">
+                  <div class="meta">BASIS — нейтральный визуал</div>
+                  <div class="price">29 руб.</div>
+                </div>
+                <!-- ОБНОВЛЕННОЕ ИМЯ ФАЙЛА ДЛЯ СКАЧИВАНИЯ -->
+                <button class="buy-btn" data-price="29 руб." data-alt="BASIS — нейтральный визуал" data-collection="BASIS" data-filename="BASIS — нейтральный визуал.jpg">Приобрести</button>
+              </div>
+            </article>
+            <article class="card" role="listitem">
+              <div class="media">
+                <!-- ОБНОВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ -->
+                <img src="images/BASIS — строгая эстетика.jpg" alt="BASIS — строгая эстетика">
+              </div>
+              <div class="info">
+                <div class="info-top">
+                  <div class="meta">BASIS — строгая эстетика</div>
+                  <div class="price">29 руб.</div>
+                </div>
+                <!-- ОБНОВЛЕННОЕ ИМЯ ФАЙЛА ДЛЯ СКАЧИВАНИЯ -->
+                <button class="buy-btn" data-price="29 руб." data-alt="BASIS — строгая эстетика" data-collection="BASIS" data-filename="BASIS — строгая эстетика.jpg">Приобрести</button>
+              </div>
+            </article>
+            <article class="card" role="listitem">
+              <div class="media">
+                <!-- ОБНОВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ -->
+                <img src="images/BASIS — сдержанная палитра.jpg" alt="BASIS — сдержанная палитра">
+              </div>
+              <div class="info">
+                <div class="info-top">
+                  <div class="meta">BASIS — сдержанная палитра</div>
+                  <div class="price">29 руб.</div>
+                </div>
+                <!-- ОБНОВЛЕННОЕ ИМЯ ФАЙЛА ДЛЯ СКАЧИВАНИЯ -->
+                <button class="buy-btn" data-price="29 руб." data-alt="BASIS — сдержанная палитра" data-collection="BASIS" data-filename="BASIS — сдержанная палитра.jpg">Приобрести</button>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="collection-section" aria-labelledby="forma-title">
+          <h3 class="collection-title" id="forma-title">FORMA</h3>
+          <div class="grid" role="list" aria-label="FORMA items">
+            <article class="card" role="listitem">
+              <div class="media">
+                <!-- ОБНОВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ -->
+                <img src="images/FORMA — насыщенная фактура.jpg" alt="FORMA — насыщенная фактура">
+              </div>
+              <div class="info">
+                <div class="info-top">
+                  <div class="meta">FORMA — насыщенная фактура</div>
+                  <div class="price">39 руб.</div>
+                </div>
+                <!-- ОБНОВЛЕННОЕ ИМЯ ФАЙЛА ДЛЯ СКАЧИВАНИЯ -->
+                <button class="buy-btn" data-price="39 руб." data-alt="FORMA — насыщенная фактура" data-collection="FORMA" data-filename="FORMA — насыщенная фактура.jpg">Приобрести</button>
+              </div>
+            </article>
+            <article class="card" role="listitem">
+              <div class="media">
+                <!-- ОБНОВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ -->
+                <img src="images/FORMA — премиальный тон.jpg" alt="FORMA — премиальный тон">
+              </div>
+              <div class="info">
+                <div class="info-top">
+                  <div class="meta">FORMA — премиальный тон</div>
+                  <div class="price">39 руб.</div>
+                </div>
+                <!-- ОБНОВЛЕННОЕ ИМЯ ФАЙЛА ДЛЯ СКАЧИВАНИЯ -->
+                <button class="buy-btn" data-price="39 руб." data-alt="FORMA — премиальный тон" data-collection="FORMA" data-filename="FORMA — премиальный тон.jpg">Приобрести</button>
+              </div>
+            </article>
+            <article class="card" role="listitem">
+              <div class="media">
+                <!-- ОБНОВЛЕННЫЙ ПУТЬ К ИЗОБРАЖЕНИЮ -->
+                <img src="images/FORMA — комбинированная фактура.jpg" alt="FORMA — комбинированная фактура">
+              </div>
+              <div class="info">
+                <div class="info-top">
+                  <div class="meta">FORMA — комбинированная фактура</div>
+                  <div class="price">39 руб.</div>
+                </div>
+                <!-- ОБНОВЛЕННОЕ ИМЯ ФАЙЛА ДЛЯ СКАЧИВАНИЯ -->
+                <button class="buy-btn" data-price="39 руб." data-alt="FORMA — комбинированная фактура" data-collection="FORMA" data-filename="FORMA — комбинированная фактура.jpg">Приобрести</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" style="max-width:900px;margin:48px auto 80px;text-align:center">
+        <h3 style="font-family:'Poppins',sans-serif;margin-bottom:8px;color:#111111">О STOOLL</h3>
+        <p style="color:var(--muted)">STOOLL — коллекция цифровых изображений табуретов. Каждый лот — это файл изображения для использования в дизайне, постах и визуальном контенте. Вы покупаете только цифровое изображение, физические предметы не поставляются.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="note">Продаётся цифровой файл — изображение. Для юридически значимых сделок используйте договор с юристом.</div>
+      <p style="margin-top:12px;color:var(--muted)">Краткая лицензия: личное и коммерческое использование разрешено; перепродажа исходного файла как отдельного товара запрещена.</p>
+      <p style="margin-top:12px;color:var(--muted)">© 2025 STOOLL</p>
+    </div>
+  </footer>
+
+  <!-- Модальные окна (остаются без изменений) -->
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">Подтверждение покупки</h3>
+      <p class="modal-text" id="confirmationText">Вы приобретаете цифровое изображение. Физический товар не поставляется. После оплаты файл автоматически скачается.</p>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" id="cancelConfirm">Отмена</button>
+        <button class="modal-btn modal-btn-confirm" id="confirmPurchase">Продолжить к оплате</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="paymentModal" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">Оплата товара</h3>
+      <p class="modal-text" id="paymentDescription">Оплата цифрового изображения</p>
+      <form class="payment-form" id="paymentForm">
+        <div class="form-group">
+          <label class="form-label" for="cardNumber">Номер карты</label>
+          <input type="text" class="form-input" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="expiryDate">Срок действия</label>
+            <input type="text" class="form-input" id="expiryDate" placeholder="ММ/ГГ" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cvv">CVV</label>
+            <input type="text" class="form-input" id="cvv" placeholder="123" required>
+          </div>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="agreement" required>
+          <label class="checkbox-label" for="agreement">
+            Я подтверждаю, что приобретаю цифровое изображение и понимаю, что физический товар не поставляется. Возврат средств за цифровые товары невозможен.
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="modal-btn modal-btn-cancel" id="cancelPayment">Отмена</button>
+          <button type="submit" class="modal-btn modal-btn-confirm">Оплатить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="finalConfirmationModal" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">Последнее подтверждение</h3>
+      <p class="modal-text" id="finalConfirmationText">Вы уверены, что хотите оплатить? После подтверждения средства будут списаны с вашей карты, и файл автоматически скачается.</p>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" id="cancelFinal">Отмена</button>
+        <button class="modal-btn modal-btn-confirm" id="confirmFinal">Да, оплатить</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="successModal" class="modal">
+    <div class="modal-content">
+      <h3 class="modal-title">Покупка успешна!</h3>
+      <p class="modal-text">Ваш платеж прошел успешно. Файл автоматически скачивается...</p>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-confirm" onclick="document.getElementById('successModal').style.display='none'">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentProduct = {};
+    
+    document.querySelectorAll('.buy-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentProduct = {
+          price: btn.dataset.price,
+          alt: btn.dataset.alt,
+          collection: btn.dataset.collection,
+          filename: btn.dataset.filename
+        };
+        
+        document.getElementById('confirmationText').textContent = 
+          `Вы приобретаете цифровое изображение "${currentProduct.alt}" из коллекции ${currentProduct.collection}. Физический товар не поставляется. После оплаты файл автоматически скачается.`;
+        
+        document.getElementById('confirmationModal').style.display = 'flex';
+      });
+    });
+    
+    document.getElementById('confirmPurchase').addEventListener('click', () => {
+      document.getElementById('confirmationModal').style.display = 'none';
+      document.getElementById('paymentDescription').textContent = 
+        `Оплата: ${currentProduct.alt} — ${currentProduct.price}`;
+      document.getElementById('paymentModal').style.display = 'flex';
+    });
+    
+    document.getElementById('cancelConfirm').addEventListener('click', () => {
+      document.getElementById('confirmationModal').style.display = 'none';
+    });
+    
+    document.getElementById('cancelPayment').addEventListener('click', () => {
+      document.getElementById('paymentModal').style.display = 'none';
+    });
+    
+    document.getElementById('paymentForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      if (!document.getElementById('agreement').checked) {
+        alert('Пожалуйста, подтвердите согласие с условиями покупки цифрового изображения');
+        return;
+      }
+      
+      document.getElementById('finalConfirmationText').textContent = 
+        `Вы уверены, что хотите оплатить ${currentProduct.price} за цифровое изображение "${currentProduct.alt}"? После подтверждения средства будут списаны с вашей карты, и файл автоматически скачается.`;
+      
+      document.getElementById('paymentModal').style.display = 'none';
+      document.getElementById('finalConfirmationModal').style.display = 'flex';
+    });
+    
+    document.getElementById('confirmFinal').addEventListener('click', () => {
+      // Создаем скрытую ссылку для скачивания
+      const downloadLink = document.createElement('a');
+      downloadLink.href = 'downloads/' + currentProduct.filename;
+      downloadLink.download = currentProduct.filename;
+      downloadLink.style.display = 'none';
+      document.body.appendChild(downloadLink);
+      
+      // Имитируем клик по ссылке для скачивания
+      downloadLink.click();
+      
+      // Удаляем ссылку из DOM
+      document.body.removeChild(downloadLink);
+      
+      // Показываем модальное окно успеха
+      document.getElementById('finalConfirmationModal').style.display = 'none';
+      document.getElementById('successModal').style.display = 'flex';
+      
+      // Сбрасываем форму
+      document.getElementById('paymentForm').reset();
+      
+      console.log('Оплата обработана:', currentProduct);
+    });
+    
+    document.getElementById('cancelFinal').addEventListener('click', () => {
+      document.getElementById('finalConfirmationModal').style.display = 'none';
+      document.getElementById('paymentModal').style.display = 'flex';
+    });
+    
+    window.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal')) {
+        e.target.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
